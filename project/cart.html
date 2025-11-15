@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - AnimeFig Collective</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* 🌈 Glass-style sections */
+    .section-box {
+      background: rgba(255, 255, 255, 0.95);
+      color: #1e1e1e;
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ✏️ Input field style */
+    .section-box input,
+    .section-box select,
+    .section-box textarea {
+      background-color: white;
+      color: #111;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      width: 100%;
+    }
+
+    .section-box input::placeholder,
+    .section-box select::placeholder {
+      color: #888;
+    }
+
+    /* ✨ Focus glow */
+    .section-box input:focus,
+    .section-box select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    /* 🌑 Dark mode version */
+    .dark .section-box {
+      background: rgba(31, 41, 55, 0.95);
+      color: #f9fafb;
+    }
+    .dark .section-box input,
+    .dark .section-box select,
+    .dark .section-box textarea {
+      background-color: #111827;
+      color: #f9fafb;
+      border: 1px solid #4b5563;
+    }
+    .dark .section-box input::placeholder {
+      color: #9ca3af;
+    }
+
+    /* Background fix to avoid blocking typing */
+    .background-layer {
+      position: absolute;
+      inset: 0;
+      z-index: -10;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-indigo-50 via-pink-50 to-white dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-white relative">
+
+  <!-- Background Layer -->
+  <div class="background-layer bg-[url('https://wallpapercave.com/wp/wp5732303.jpg')] bg-cover bg-center opacity-10"></div>
+
+  <!-- Header -->
+  <header class="bg-white/70 dark:bg-gray-900/70 shadow-md sticky top-0 z-50 backdrop-blur">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">← Back to Shop</a>
+      <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Your Cart</h1>
+    </nav>
+  </header>
+
+  <!-- Cart Section -->
+  <main class="container mx-auto px-4 py-12 space-y-10">
+
+    <!-- CART ITEMS -->
+    <div id="cartContainer" class="space-y-6"></div>
+
+    <!-- ADDRESS SECTION -->
+    <div id="addressSection" class="section-box hidden">
+      <h2 class="text-2xl font-bold text-indigo-700 mb-4">Shipping Address</h2>
+      <form id="addressForm" class="space-y-4 text-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" id="fullName" placeholder="Full Name">
+          <input type="text" id="phone" placeholder="Phone Number">
+        </div>
+        <input type="text" id="address" placeholder="Street Address / House No.">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" id="city" placeholder="City">
+          <input type="text" id="pincode" placeholder="Pincode">
+        </div>
+        <select id="state">
+          <option value="">Select State</option>
+          <option>Delhi</option>
+          <option>Maharashtra</option>
+          <option>Uttar Pradesh</option>
+          <option>Tamil Nadu</option>
+          <option>Karnataka</option>
+          <option>West Bengal</option>
+          <option>Other</option>
+        </select>
+      </form>
+    </div>
+
+    <!-- BILL SUMMARY -->
+    <div id="cartSummary" class="section-box hidden">
+      <h2 class="text-3xl font-bold text-indigo-700 mb-6">Bill Summary</h2>
+      <div class="text-lg space-y-2">
+        <p>Subtotal: <span id="subtotal" class="font-semibold">Rs.0.00</span></p>
+        <p>GST (18%): <span id="gst" class="font-semibold">Rs.0.00</span></p>
+        <p class="text-2xl mt-3">Grand Total: <span id="total" class="font-bold text-indigo-600">Rs.0.00</span></p>
+        <p class="text-gray-700 dark:text-gray-300 mt-2">Expected Delivery: <span id="deliveryDate" class="font-semibold"></span></p>
+      </div>
+    </div>
+
+    <!-- PAYMENT SECTION -->
+    <div id="paymentSection" class="section-box hidden">
+      <h2 class="text-2xl font-bold text-indigo-700 mb-4">Payment Options</h2>
+      <form id="paymentForm" class="space-y-4 text-lg">
+        <label class="flex items-center space-x-3">
+          <input type="radio" name="payment" value="cod" checked>
+          <span>Cash on Delivery (COD)</span>
+        </label>
+
+        <label class="flex items-center space-x-3">
+          <input type="radio" name="payment" value="upi">
+          <span>UPI / Google Pay / PhonePe</span>
+        </label>
+
+        <label class="flex items-center space-x-3">
+          <input type="radio" name="payment" value="bank">
+          <span>Credit / Debit Card / Net Banking</span>
+        </label>
+
+        <div id="upiField" class="hidden mt-4">
+          <input type="text" id="upiId" placeholder="Enter UPI ID (e.g. name@upi)">
+        </div>
+
+        <div id="bankField" class="hidden mt-4 space-y-3">
+          <input type="text" placeholder="Card Number">
+          <input type="text" placeholder="Cardholder Name">
+          <div class="flex gap-3">
+            <input type="text" placeholder="MM/YY" class="w-1/2">
+            <input type="text" placeholder="CVV" class="w-1/2">
+          </div>
+        </div>
+      </form>
+
+      <div class="flex justify-between mt-8">
+        <button onclick="clearCart()" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition">Clear Cart</button>
+        <button onclick="checkout()" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition">Proceed to Pay</button>
+      </div>
+    </div>
+
+    <p id="emptyMessage" class="text-center text-gray-600 dark:text-gray-300 text-lg mt-12">Your cart is empty 😢</p>
+
+  </main>
+
+  <!-- JS -->
+  <script>
+    const cartContainer = document.getElementById("cartContainer");
+    const addressSection = document.getElementById("addressSection");
+    const cartSummary = document.getElementById("cartSummary");
+    const paymentSection = document.getElementById("paymentSection");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const subtotalEl = document.getElementById("subtotal");
+    const gstEl = document.getElementById("gst");
+    const totalEl = document.getElementById("total");
+    const deliveryDateEl = document.getElementById("deliveryDate");
+
+    function renderCart() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "";
+        cartSummary.classList.add("hidden");
+        paymentSection.classList.add("hidden");
+        addressSection.classList.add("hidden");
+        emptyMessage.classList.remove("hidden");
+        return;
+      }
+
+      emptyMessage.classList.add("hidden");
+      cartSummary.classList.remove("hidden");
+      paymentSection.classList.remove("hidden");
+      addressSection.classList.remove("hidden");
+
+      cartContainer.innerHTML = "";
+      let subtotal = 0;
+
+      cart.forEach((item, index) => {
+        const price = parseFloat(item.price.replace("Rs.", ""));
+        subtotal += price;
+
+        cartContainer.insertAdjacentHTML("beforeend", `
+          <div class="section-box flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center space-x-6">
+              <img src="${item.img}" alt="${item.name}" class="w-28 h-28 object-cover rounded-lg shadow-md">
+              <div>
+                <h3 class="text-xl font-semibold text-indigo-600">${item.name}</h3>
+                <p class="text-gray-600 dark:text-gray-400">${item.desc}</p>
+                <p class="text-lg font-bold mt-2">${item.price}</p>
+              </div>
+            </div>
+            <button onclick="removeItem(${index})" class="mt-4 md:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Remove</button>
+          </div>
+        `);
+      });
+
+      const gst = subtotal * 0.18;
+      const total = subtotal + gst;
+      subtotalEl.textContent = "Rs." + subtotal.toFixed(2);
+      gstEl.textContent = "Rs." + gst.toFixed(2);
+      totalEl.textContent = "Rs." + total.toFixed(2);
+
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 5);
+      deliveryDateEl.textContent = deliveryDate.toDateString();
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function clearCart() {
+      localStorage.removeItem("cart");
+      renderCart();
+    }
+
+    document.addEventListener("change", (e) => {
+      if (e.target.name === "payment") {
+        document.getElementById("upiField").classList.add("hidden");
+        document.getElementById("bankField").classList.add("hidden");
+        if (e.target.value === "upi") document.getElementById("upiField").classList.remove("hidden");
+        if (e.target.value === "bank") document.getElementById("bankField").classList.remove("hidden");
+      }
+    });
+
+    function checkout() {
+      const name = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+      const state = document.getElementById("state").value.trim();
+
+      if (!name || !phone || !address || !city || !pincode || !state) {
+        alert("Please fill in all address fields before checkout.");
+        return;
+      }
+
+      const method = document.querySelector('input[name="payment"]:checked').value;
+      if (method === "upi" && !document.getElementById("upiId").value.trim()) {
+        alert("Please enter a valid UPI ID.");
+        return;
+      }
+
+      alert(`✅ Order Placed Successfully!\n\nThank you, ${name}!\nYour order will be delivered to:\n${address}, ${city}, ${state} - ${pincode}\n\nPayment Method: ${method.toUpperCase()}\nExpected Delivery: ${deliveryDateEl.textContent}`);
+
+      localStorage.removeItem("cart");
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
